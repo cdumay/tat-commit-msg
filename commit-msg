@@ -1,0 +1,82 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+"""
+.. codeauthor:: Cédric Dumay <cedric.dumay@gmail.com>
+
+
+"""
+import os
+import sys
+import subprocess
+import json
+import re
+
+def get_tat_message_id(topic, version):
+    """docstring for get_tat_message_id"""
+    data = sys_exec("tatcli message list %s --tag='release:%s'" % (topic, version))
+    if data['messages'] is None:
+        new = sys_exec(r"tatcli message add %s --label='#cccccc;develop' \#release:%s ''" % (topic, version))
+        print "[tat %s] New release '%s' was created" % (topic, version)
+        return new['message']['_id']
+    return data['messages'][0]['_id']
+
+def sys_exec(cmd, **kwargs):
+    """sys_exec"""
+    envs = dict()
+    if kwargs.get('restrict_env', False) == False:
+        envs.update(dict(os.environ))
+
+    envs.update(kwargs.get('environ', dict()))
+    subp = subprocess.Popen(
+        cmd,
+        stdout  = subprocess.PIPE,
+        stderr  = subprocess.PIPE,
+        shell   = True,
+        env     = envs,
+        cwd     = kwargs.get('cwd', None)
+    )
+    outputs = subp.communicate()[:2]
+    
+    if subp.returncode != 0:
+        print >> sys.stderr, outputs[1].strip()
+        sys.exit(subp.returncode)
+    else:
+        return json.loads(outputs[0].strip())
+
+def read_file(path):
+    """docstring for read_file"""
+    if os.path.exists(path):
+        return open(path, "r").read().strip()
+
+if __name__ == '__main__':
+    # we load topic from environment
+    TAT_TOPIC=os.environ.get('TAT_TOPIC', read_file('TOPIC'))
+    if TAT_TOPIC is None:
+        print >> sys.stderr, "No topic set"
+        sys.exit(1)
+
+    # we load the current version
+    VERSION=os.environ.get('TAT_VERSION', read_file('VERSION'))
+    if VERSION is None:
+        print >> sys.stderr, "No version found"
+        sys.exit(1)
+
+    # we load the commit message
+    MSG=read_file(sys.argv[1])
+    if MSG is None:
+        print >> sys.stderr, "No commit message found"
+        MSG=""
+
+    # we format the message
+    MSG = "#" + str(MSG).replace(r"'", r"\'")
+
+    # we search jira links in the commit message
+    MATCH = re.match(r".*\#([A-Z]+\-[\d]+).*", MSG)
+    if MATCH:
+        JIRA = MATCH.group(1)
+        MSG = MSG.replace(JIRA, "jira:%s" % JIRA)
+
+    # we format the message
+    OUTPUT = sys_exec("tatcli message reply %s %s '%s'" % (TAT_TOPIC, get_tat_message_id(TAT_TOPIC, VERSION), MSG))
+    print "[tat %s] Changelog sent to TAT" % TAT_TOPIC
