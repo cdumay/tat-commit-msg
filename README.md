@@ -35,8 +35,8 @@ sh-4.2$ export TAT_VERSION=0.5
 
 ### Using files
 This hook can load his configuration using the files in the git repository:
-* TOPIC: The TAT topic to use.
-* VERSION: Your software release.
+* `TOPIC`: The TAT topic to use.
+* `VERSION`: Your software release.
 
 ```
 sh-4.2$ cd my_git_repo
