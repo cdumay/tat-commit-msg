@@ -55,5 +55,6 @@ sh-4.2$ git commit -am "feat: This is a test with a jira link (#TEST-1)"
  1 file changed, 1 insertion(+), 1 deletion(-)
 ```
 
+**Result in Tat WebUI**
 ![Release View](https://raw.githubusercontent.com/cdumay/tat-commit-msg/master/view.png)
 
