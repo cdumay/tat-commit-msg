@@ -25,8 +25,8 @@ sh-4.2$ chmod +x commit-msg
 ### Using environment variables
 
 This hook uses the following environment variables:
-* TAT_TOPIC: The TAT topic to use.
-* TAT_VERSION: Your software release.
+* `TAT_TOPIC`: The TAT topic to use.
+* `TAT_VERSION`: Your software release.
 
 ```
 sh-4.2$ export TAT_TOPIC=/Internal/Test
