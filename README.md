@@ -43,22 +43,6 @@ sh-4.2$ cd my_git_repo
 sh-4.2$ echo "/Internal/Test" > TOPIC
 sh-4.2$ echo "0.5" > VERSION
 ```
-
-## Disable the Hook
-The hook can be disabled by setting the environment variable `SEND_TO_TAT`
-
-```
-sh-4.2$ export SEND_TO_TAT=NO
-sh-4.2$ cd my_git_repo
-sh-4.2$ git commit -am 'feat: This is a usefull commit'
-[tat /Internal/Test] TAT is disabled
-[master bd2b6d7] update
- 1 file changed, 1 insertion(+), 1 deletion(-)
-```
-
-Note: To reactivate the hook, just unset the environment variable `SEND_TO_TAT`
-or set it to `YES` (or `Y`).
-
 ## Example of use
 
 ```
@@ -73,4 +57,19 @@ sh-4.2$ git commit -am "feat: This is a test with a jira link (#TEST-1)"
 **Result in Tat WebUI**
 
 ![Release View](https://raw.githubusercontent.com/cdumay/tat-commit-msg/master/view.png)
+
+## Disable the Hook
+The hook can be disabled by setting the environment variable `SEND_TO_TAT`
+
+```
+sh-4.2$ export SEND_TO_TAT=NO
+sh-4.2$ cd my_git_repo
+sh-4.2$ git commit -am 'feat: This is a usefull commit'
+[tat /Internal/Test] TAT is disabled
+[master bd2b6d7] update
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+```
+
+**Note**: To reactivate the hook, just unset the environment variable `SEND_TO_TAT`
+or set it to `YES` (or `Y`).
 
