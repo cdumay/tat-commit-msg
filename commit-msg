@@ -78,5 +78,8 @@ if __name__ == '__main__':
         MSG = MSG.replace(JIRA, "jira:%s" % JIRA)
 
     # we format the message
-    OUTPUT = sys_exec("tatcli message reply %s %s '%s'" % (TAT_TOPIC, get_tat_message_id(TAT_TOPIC, VERSION), MSG))
-    print "[tat %s] Changelog sent to TAT" % TAT_TOPIC
+    if os.environ.get('SEND_TO_TAT', "yes").upper() in ("Y", "YES"):
+        OUTPUT = sys_exec("tatcli message reply %s %s '%s'" % (TAT_TOPIC, get_tat_message_id(TAT_TOPIC, VERSION), MSG))
+        print "[tat %s] Changelog sent to TAT" % TAT_TOPIC
+    else:
+        print "[tat %s] TAT is disabled" % TAT_TOPIC
